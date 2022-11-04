@@ -6,10 +6,12 @@ window.addEventListener("load", function () {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   let particles = [];
+  const alphaSlider = document.getElementById("alphaSlider");
+  const alphaLabel = document.getElementById('alphaLabel');
   let radians = 0;
   let colors = ["#2185c5", "#7ecefd", "#fff6ee", "#ff7f66"];
   let alpha = 1;
-  let pointerDown = false;
+  let trailsOn = false;
   class Particle {
     constructor(x, y, radius, color) {
       this.x = x;
@@ -51,27 +53,35 @@ window.addEventListener("load", function () {
     });
     ctx.restore();
     radians += 0.005;
-    if (pointerDown && alpha >= 0.1) {
-        alpha -= 0.02;
-      }else if(!pointerDown && alpha <= 1){
-         alpha += 0.02
-      }
+    if (trailsOn && alpha >= 0.1) {
+      alpha -= 0.02;
+    } else if (!trailsOn && alpha <= 1) {
+      alpha += 0.02;
+    }
     requestAnimationFrame(animate);
   }
   init();
   animate();
-  this.window.addEventListener("pointerdown", () => {
-    pointerDown = true;
+  
+  alphaSlider.addEventListener("change", function (e) {
+    alpha = e.target.value;
+    updateSliders();
+    init();
+    animate();
   });
-  this.window.addEventListener('pointerup', () => {
-    pointerDown = false;
-  });
+  function updateSliders() {
+    alphaSlider.value = alpha;
+    alphaLabel.innerHTML = " Alpha Value: " + Number(alpha).toFixed(1);
+   console.log(alpha)
+  }
+  updateSliders();
 
   window.addEventListener("resize", function () {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     init();
   });
+  
 
   // load end
 });
